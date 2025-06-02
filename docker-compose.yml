@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: text-analyzer-app
+    restart: unless-stopped
+    environment:
+      - APP_PORT=8080
+    expose:
+      - "8080"
+    networks:
+      - analyzer-network
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: text-analyzer-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./static:/app/static:ro
+      - ./templates:/app/templates:ro
+      - ./certbot/www:/var/www/certbot:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+    depends_on:
+      - app
+    networks:
+      - analyzer-network
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - analyzer-network
+
+networks:
+  analyzer-network:
+    driver: bridge
+
+volumes:
+  certbot-www:
+  certbot-conf:
