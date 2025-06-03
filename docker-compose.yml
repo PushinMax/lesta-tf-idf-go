@@ -26,27 +26,11 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./static:/app/static:ro
       - ./templates:/app/templates:ro
-      - ./certbot/www:/var/www/certbot:ro
-      - ./certbot/conf:/etc/letsencrypt:ro
     depends_on:
       - app
-    networks:
-      - analyzer-network
-
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - ./certbot/www:/var/www/certbot
-      - ./certbot/conf:/etc/letsencrypt
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     networks:
       - analyzer-network
 
 networks:
   analyzer-network:
     driver: bridge
-
-volumes:
-  certbot-www:
-  certbot-conf:
