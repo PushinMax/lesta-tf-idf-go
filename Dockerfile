@@ -4,7 +4,7 @@ RUN apk add --no-cache git
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY . .
 RUN go mod download
 
 COPY . .
@@ -19,8 +19,8 @@ WORKDIR /app
 
 COPY --from=builder /app/text-analyzer .
 
-# COPY --from=builder /app/templates ./templates
-# COPY --from=builder /app/static ./static
+COPY --from=builder /app/templates ./templates
+COPY --from=builder /app/static ./static
 
 ENV APP_PORT=8080
 
