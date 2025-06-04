@@ -19,8 +19,7 @@ func (s *StatusService) Status() error {
 }
 
 func (s *StatusService) Version() (string, error) {
-	
-	version := viper.GetString("server.port")
+	version := viper.GetString("server.version")
 	if version == "" {
 		return "", errors.New("Fail")
 	}

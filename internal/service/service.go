@@ -13,6 +13,7 @@ type GeneralApi interface {
 }
 
 type MetricsApi interface {
+	
 }
 
 type StatusApi interface {
