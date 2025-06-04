@@ -28,7 +28,7 @@ func main() {
 
 
 	go func() {
-		if err := server.Run("8080", handler.Init()); err != nil {
+		if err := server.Run(viper.GetString("server.port"), handler.Init()); err != nil {
 			log.Fatal(err)
 		}
 	}()

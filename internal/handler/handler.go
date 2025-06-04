@@ -31,5 +31,10 @@ func (h *Handler) Init() *gin.Engine {
 	router.POST("/upload", h.handleUpload)
 	router.GET("/data/:session/:page", h.getPageData)
 
+
+	router.GET("/status", h.status)
+	router.GET("/version", h.version)
+
+
 	return router
 }

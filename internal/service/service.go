@@ -15,14 +15,21 @@ type GeneralApi interface {
 type MetricsApi interface {
 }
 
+type StatusApi interface {
+	Status() error
+	Version() (string, error)
+}
+
 type Service struct {
 	GeneralApi
 	MetricsApi
+	StatusApi
 }
 
 func New(session *session.Session) *Service {
 	
 	return &Service{
 		GeneralApi: newGeneralApi(session),
+		StatusApi: newStatusApi(),
 	}
 }
