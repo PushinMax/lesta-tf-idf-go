@@ -7,8 +7,6 @@ services:
       dockerfile: Dockerfile
     container_name: text-analyzer-app
     restart: unless-stopped
-    environment:
-      - APP_PORT=8080
     expose:
       - "8080"
     networks:

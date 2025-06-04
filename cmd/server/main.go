@@ -11,16 +11,16 @@ import (
 	"github.com/PushinMax/lesta-tf-idf-go/internal/server"
 	"github.com/PushinMax/lesta-tf-idf-go/internal/service"
 	"github.com/PushinMax/lesta-tf-idf-go/internal/session"
-	// "github.com/joho/godotenv"
-	// "github.com/spf13/viper"
+	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
 )
 
 
 
 func main() {
-	/*if err := InitConfig(); err != nil {
+	if err := InitConfig(); err != nil {
 		log.Fatal(err)
-	}*/
+	}
 	session := session.New()
 	service := service.New(session)
 	handler := handler.New(service)
@@ -39,12 +39,9 @@ func main() {
 	<-ch
 	_ = server.Shutdown(context.Background())
 	// _ = db.Close()
-
-	
-	
 }
 
-/*func InitConfig() error {
+func InitConfig() error {
 	if err := godotenv.Load(); err != nil {
 		return err
 	}
@@ -52,7 +49,7 @@ func main() {
 	viper.AddConfigPath(".") 
     viper.SetConfigType("yml")
 	return viper.ReadInConfig()
-}*/
+}
 
 
 
