@@ -19,10 +19,11 @@ WORKDIR /app
 
 COPY --from=builder /app/text-analyzer .
 
+# COPY --from=builder /app/configs ./configs
 COPY --from=builder /app/templates ./templates
 COPY --from=builder /app/static ./static
 
-ENV APP_PORT=8080
+# ENV APP_PORT=8080
 
 EXPOSE 8080
 
