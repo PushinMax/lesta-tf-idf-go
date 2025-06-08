@@ -1,4 +1,4 @@
-# lesta-tf-idf-
+# lesta-tf-idf-go
 
 Приложение доступно всегда(почти) по [следующему IP](37.9.53.117:80)
 ## Запуск 
@@ -19,7 +19,17 @@ docker-compose up -d --build
 sudo kill -9 $(sudo lsof -t -i:8080)
 ```
 
-### Подключиться в VM
+### Подключиться к VM
 ```bash
 ssh ubuntu@37.9.53.117 -i ~/.ssh/private.key
+```
+
+### Генерация .env файла
+```bash
+sh scripts/generate_env.sh
+```
+
+### **Подключение к базе данных**
+```bash
+docker exec -it postgres_db psql -U postgres
 ```

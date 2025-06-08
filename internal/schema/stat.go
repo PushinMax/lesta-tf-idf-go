@@ -3,9 +3,9 @@ package schema
 
 // Структура для хранения результатов
 type WordStat struct {
-	Word string
-	TF   int     // Term Frequency (частота слова в документе)
-	IDF  float64 // Inverse Document Frequency (обратная частота документа)
+	Word string `bson:"word" json:"word"`
+	TF   int    `bson:"tf" json:"tf"`
+	IDF  float64`bson:"idf" json:"idf"`
 }
 
 

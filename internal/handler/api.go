@@ -4,15 +4,21 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 func (h *Handler) handleUpload(c *gin.Context) {
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid request body"})
+		return
+	}
 	file, err := c.FormFile("file")
 	if err != nil {
 		c.JSON(400, gin.H{"error": "File required"})
 		return
 	}
 
-	response, err := h.services.UploadFile(file)
+	response, err := h.services.UploadFile(file, userID.(string))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
@@ -29,7 +35,11 @@ func (h *Handler) handleUpload(c *gin.Context) {
 
 func (h *Handler) getPageData(c * gin.Context) {
 	sessionID := c.Param("session")
-	page, _ := strconv.Atoi(c.Param("page"))
+	page, err := strconv.Atoi(c.Param("page"))
+	if err != nil {
+		c.JSON(404, gin.H{"error": "page should be a number"})
+		return
+	}
 
 	stat, err := h.services.GetPageData(sessionID, page)
 	if err != nil {
@@ -42,26 +52,3 @@ func (h *Handler) getPageData(c * gin.Context) {
 	})
 }
 
-func (h *Handler) version(c *gin.Context) {
-	version, err := h.services.Version()
-	if err != nil {
-		c.JSON(500, gin.H{
-		"error": err.Error(),
-		})
-	}
-	c.JSON(500, gin.H{
-		"version": version,
-	})
-}
-
-func (h *Handler) status(c *gin.Context) {
-	err := h.services.Status()
-	if err != nil {
-		c.JSON(500, gin.H{
-		"error": err.Error(),
-		})
-	}
-	c.JSON(500, gin.H{
-		"status": "OK",
-	})
-}

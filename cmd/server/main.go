@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/PushinMax/lesta-tf-idf-go/internal/handler"
+	"github.com/PushinMax/lesta-tf-idf-go/internal/repository"
 	"github.com/PushinMax/lesta-tf-idf-go/internal/server"
 	"github.com/PushinMax/lesta-tf-idf-go/internal/service"
 	"github.com/PushinMax/lesta-tf-idf-go/internal/session"
@@ -21,8 +22,30 @@ func main() {
 	if err := InitConfig(); err != nil {
 		log.Fatal(err)
 	}
+
+	db, err := repository.NewPostgresDB(repository.PostgresConfig{
+		Host:     viper.GetString("db.host"),
+		Port:     viper.GetString("db.port"),
+		Username: os.Getenv("DB_USER"),
+		DBName:   viper.GetString("db.dbname"),
+		SSLMode:  viper.GetString("db.sslmode"),
+		Password: os.Getenv("DB_PASSWORD"),
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	mongoDB, err := repository.NewMongoDB(repository.MongoConfig{
+		Host: "localhost",
+		Port: "27017",
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	repository := repository.New(db, mongoDB)
 	session := session.New()
-	service := service.New(session)
+	
+	service := service.New(session, repository)
 	handler := handler.New(service)
 	server := new(server.Server)
 
@@ -38,7 +61,8 @@ func main() {
 
 	<-ch
 	_ = server.Shutdown(context.Background())
-	// _ = db.Close()
+	_ = db.Close()
+	_ = mongoDB.Disconnect(context.Background())
 }
 
 func InitConfig() error {

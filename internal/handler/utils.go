@@ -8,3 +8,12 @@ func ceilDiv(a, b int) int {
 	return (a + b - 1) / b
 }
 
+type LoginRequest struct {
+	Login string `json:"login" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+type ChangePasswordRequest struct {
+	Password string `json:"password" binding:"required"`
+}
+
