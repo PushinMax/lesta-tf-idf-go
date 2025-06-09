@@ -24,7 +24,7 @@ func NewMongoDB(cfg MongoConfig) (*mongo.Client, error) {
 	host := os.Getenv("MONGO_HOST")     
 	port := os.Getenv("MONGO_PORT")    
 	// database := os.Getenv("MONGO_DB") 
-	mongoURI := fmt.Sprintf("mongodb://%s:%s@%s:%s", username, password, host, port)
+	mongoURI := fmt.Sprintf("mongodb://%s:%s@%s:%s/my-db?authSource=admin", username, password, host, port)
 	client, _ := mongo.Connect(options.Client().ApplyURI(mongoURI).SetAuth(
 			options.Credential{
 				AuthSource: "admin", 
