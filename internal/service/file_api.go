@@ -113,16 +113,16 @@ func (s *FileService) GetFile(fileID string, userID string) (string, error) {
 	return s.repos.GetFile(fileID, userID)
 }
 func (s *FileService) GetListFiles(userID string) ([]string, error) {
-	return nil, nil
+	return s.repos.GetListFiles(userID)
 }
 func (s *FileService) GetFilesStats(fileID string, userID string) ([]schema.WordStat, error) {
-	return nil, nil
+	return s.repos.GetFilesStats(fileID, userID)
 }
 func (s *FileService) DeleteFile(fileID, userID string) error {
-	return nil
+	return s.repos.DeleteFile(fileID, userID)
 }
 func (s *FileService) DeleteUserFiles(userID string) (int64, error) {
-	return 0, nil
+	return s.repos.DeleteUserFiles(userID)
 }
 
 func generateFileID() string {

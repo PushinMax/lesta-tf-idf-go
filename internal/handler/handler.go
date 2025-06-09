@@ -43,12 +43,13 @@ func (h *Handler) Init() *gin.Engine {
 		documents.GET("/", h.getListDocuments)
 		documents.GET("/:document_id", h.getDocument)
 		documents.GET("/:document_id/statistics", h.getDocumentsStats)
-		documents.DELETE("/:document_id", nil)
+		documents.DELETE("/:document_id", h.deleteDocument)
 	}
 	collections := router.Group("/collections")
 	{
 		collections.Use(h.JWTAuth())
 		collections.GET("/", nil)
+		collections.POST("/create", nil)
 		collections.GET("/:collection_id", nil)
 		collections.GET("/:collection_id/statistics", nil)
 		collections.DELETE("/:collection/:document_id", nil)

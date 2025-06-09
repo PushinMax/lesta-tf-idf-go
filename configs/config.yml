@@ -9,7 +9,7 @@ db:
   sslmode: "disable"
 
 jwt:
-  access_expiry: "15m"
+  access_expiry: "60m"
   refresh_expiry: "720h"   
 
 

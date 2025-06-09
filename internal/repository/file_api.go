@@ -30,6 +30,7 @@ func (r *FileRepo) InsertFile(file FileDocument) error {
 
 	//insertedID := result.InsertedID
 	log.Printf("Документ вставлен с ID: %v", result.InsertedID)
+    log.Println(file.Content)
 	return nil
 }
 
@@ -97,7 +98,7 @@ func (r *FileRepo) GetFilesStats(fileID string, userID string) ([]schema.WordSta
 
 func (r *FileRepo) GetFile(fileID string, userID string) (string, error) {
     var result struct {
-        file string `bson:"file"`
+        File string `bson:"file"`
     }
     err := r.db.Database("test").Collection("files").FindOne(
         context.TODO(),
@@ -118,7 +119,7 @@ func (r *FileRepo) GetFile(fileID string, userID string) (string, error) {
         return "", fmt.Errorf("ошибка при получении файла: %v", err)
     }
 
-    return result.file, nil
+    return result.File, nil
 }
 
 func (r *FileRepo) DeleteFile(fileID, userID string) error {
