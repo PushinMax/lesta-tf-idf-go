@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 	"go.mongodb.org/mongo-driver/v2/mongo/readpref"
@@ -24,7 +24,7 @@ func NewMongoDB(cfg MongoConfig) (*mongo.Client, error) {
 	host := os.Getenv("MONGO_HOST")     
 	port := os.Getenv("MONGO_PORT")    
 	// database := os.Getenv("MONGO_DB") 
-	mongoURI := fmt.Sprintf("mongodb://%s:%s@%s:%s/my-db?authSource=admin", username, password, host, port)
+	mongoURI := fmt.Sprintf("mongodb://%s:%s@%s:%s/test?authSource=admin", username, password, host, port)
 	client, _ := mongo.Connect(options.Client().ApplyURI(mongoURI).SetAuth(
 			options.Credential{
 				AuthSource: "admin", 

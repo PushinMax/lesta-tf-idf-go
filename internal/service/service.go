@@ -41,6 +41,10 @@ type FileApi interface {
 	DeleteUserFiles(userID string) (int64, error)
 }
 
+type CollectionApi interface {
+
+}
+
 type Service struct {
 	GeneralApi
 	// MetricsApi
@@ -48,6 +52,7 @@ type Service struct {
 	AuthApi
 	UserApi
 	FileApi
+	CollectionApi
 }
 
 func New(session *session.Session, repos *repository.Repository) *Service {

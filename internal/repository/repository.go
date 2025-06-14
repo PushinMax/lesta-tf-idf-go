@@ -8,7 +8,7 @@ import (
 )
 
 type AuthApi interface{
-	Authentication(login, password string) (uuid.UUID, error) 
+	Authentication(login, password string) (uuid.UUID, error)
 	Register(login, password string) error
 	ChangePassword(id, password string) error
 	//Logout()
@@ -25,10 +25,14 @@ type FileApi interface{
 	DeleteUserFiles(userID string) (int64, error)
 }
 
-type Repository struct{
+type CollectionApi interface {
+	СreateCollection(userID string, name string) error
+}
+
+type Repository struct {
 	AuthApi
 	FileApi
-
+	CollectionApi
 }
 
 
