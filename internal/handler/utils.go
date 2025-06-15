@@ -17,3 +17,7 @@ type ChangePasswordRequest struct {
 	Password string `json:"password" binding:"required"`
 }
 
+type RefreshRequest struct {
+	Token string `json:"token" binding:"required"`	
+}
+

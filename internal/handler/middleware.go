@@ -35,8 +35,17 @@ func (h *Handler) JWTAuth() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Token expired"})
 			return
 		}
-		c.Set("user_id", claims.Subject) // проверить нужно ли 
+		c.Set("user_id", claims.Subject) 
 		
 		c.Next()
+	}
+}
+
+func (h *Handler) MetricsMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		start := time.Now()
+		c.Next()
+		duration := time.Since(start)
+		_ = h.services.UpdateMetrics(duration)
 	}
 }

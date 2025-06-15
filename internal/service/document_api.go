@@ -128,6 +128,10 @@ func (s *DocumentService) DeleteUserDocuments(userID string) error {
 	return s.repos.DeleteAllDocuments(userID)
 }
 
+func (s *DocumentService) GetHuffman(fileID, userID string) (string, error) {
+ 	return s.repos.GetHuffman(fileID, userID)
+}
+
 func generateFileID() string {
 	return strconv.FormatInt(time.Now().UnixNano(), 36)
 }

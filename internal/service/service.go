@@ -2,6 +2,7 @@ package service
 
 import (
 	"mime/multipart"
+	"time"
 
 	"github.com/PushinMax/lesta-tf-idf-go/internal/repository"
 	"github.com/PushinMax/lesta-tf-idf-go/internal/schema"
@@ -14,7 +15,8 @@ type GeneralApi interface {
 }
 
 type MetricsApi interface {
-	
+	GetMetrics() (*MetricsResponse, error)
+	UpdateMetrics(duration time.Duration) error
 }
 
 type StatusApi interface {
@@ -26,10 +28,13 @@ type AuthApi interface{
 	Login(login, password, ip string) (*TokenPairResponse, error)
 	Register(login, password string) error
 	ValidateToken(token string) (*CustomClaims, error)
-}
+	RefreshToken(refreshToken, ip string) (*TokenPairResponse, error)
+	Logout(userID string) error
+} 
 
 type UserApi interface {
 	ChangePassword(id, password string) error
+	DeleteUser(userID string) error
 }
 
 type DocumentApi interface {
@@ -39,6 +44,7 @@ type DocumentApi interface {
 	GetDocumentStats(fileID string, userID string) ([]schema.WordStat, error)
 	DeleteDocument(fileID, userID string) error
 	DeleteUserDocuments(userID string) error
+	GetHuffman(documentID, userID string) (string, error)
 }
 
 type CollectionApi interface {
@@ -54,7 +60,7 @@ type CollectionApi interface {
 
 type Service struct {
 	GeneralApi
-	// MetricsApi
+	MetricsApi
 	StatusApi
 	AuthApi
 	UserApi
@@ -65,6 +71,7 @@ type Service struct {
 func New(session *session.Session, repos *repository.Repository) *Service {
 	return &Service{
 		GeneralApi: newGeneralApi(session),
+		MetricsApi: newMetricsApi(),
 		StatusApi: newStatusApi(),
 		AuthApi: newAuthApi(repos),
 		UserApi: newUserApi(repos),

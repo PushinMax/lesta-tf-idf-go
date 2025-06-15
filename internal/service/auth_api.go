@@ -1,9 +1,10 @@
 package service
 
 import (
+	"fmt"
+	"log"
 	"os"
 	"time"
-	"fmt"
 
 	"github.com/PushinMax/lesta-tf-idf-go/internal/repository"
 	"github.com/golang-jwt/jwt/v5"
@@ -66,7 +67,9 @@ func (s *AuthService) Login(login, password, ip string) (*TokenPairResponse, err
 		return nil, fmt.Errorf("refresh token generation failed: %w", err)
 	}
 
-
+	 if err := s.repos.SetRefreshToken(userID, refreshToken); err != nil {
+		return nil, fmt.Errorf("failed to set refresh token: %w", err)
+    }
 
 	return &TokenPairResponse{
 		AccessToken: accessToken,
@@ -85,6 +88,67 @@ func (s *AuthService) ValidateToken(token string) (*CustomClaims, error) {
 	}
 	// проверить стоп-лист
 	return claims, nil
+}
+
+func (s *AuthService) RefreshToken(refreshToken, ip string) (*TokenPairResponse, error) {
+ 	claims, err := ValidateJWT(refreshToken, s.cfg.RefreshSecret)
+	if err != nil {
+		return nil, err
+	}
+	if claims.IP != ip {
+		log.Printf("IP address mismatch: expected %s, got %s", claims.IP, ip)
+  		return nil, fmt.Errorf("IP address mismatch")
+ 	}
+	if claims.TokenType != "refresh" {
+		return nil, fmt.Errorf("invalid token type: %s", claims.TokenType)
+	}
+	if claims.IssuedAt.Time.Add(s.cfg.RefreshExpiry).Before(time.Now()) {
+  		return nil, fmt.Errorf("refresh token expired")
+	}
+
+
+	jti := uuid.New().String()
+
+	
+	accessToken, err := GenerateJWT(
+		claims.Subject,
+		ip,
+		jti,
+		s.cfg.AccessSecret,
+		s.cfg.AccessExpiry,
+		"access",
+	)
+	if err != nil {
+		return nil, fmt.Errorf("access token generation failed: %w", err)
+	}
+
+	newRefreshToken, err := GenerateJWT(
+		claims.Subject,
+		ip,
+		jti,
+		s.cfg.RefreshSecret,
+		s.cfg.RefreshExpiry,
+		"refresh",
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("refresh token generation failed: %w", err)
+	}
+
+	if err := s.repos.CheckAndChangeRefreshToken(uuid.MustParse(claims.Subject), refreshToken, newRefreshToken); err != nil {
+  		return nil, fmt.Errorf("failed to check and change refresh token: %w", err)
+ 	}
+	return &TokenPairResponse{
+		AccessToken: accessToken,
+		RefreshToken: newRefreshToken,
+	}, nil
+}
+
+func (s *AuthService) Logout(userID string) error {
+ 	if err := s.repos.Logout(userID); err != nil {
+  		return fmt.Errorf("logout failed: %w", err)		
+   	}
+	return nil
 }
 
 type CustomClaims struct {

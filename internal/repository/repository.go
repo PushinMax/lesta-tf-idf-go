@@ -9,9 +9,12 @@ import (
 
 type AuthApi interface{
 	Authentication(login, password string) (uuid.UUID, error)
+	SetRefreshToken(userID uuid.UUID, token string) error
+	CheckAndChangeRefreshToken(userID uuid.UUID, token_old, token_new string) error
 	Register(login, password string) error
 	ChangePassword(id, password string) error
-	//Logout()
+	Logout(id string) error
+	DeleteUser(id string) error
 	//DeleteUser()
 	//ChangePassword()
 }
@@ -23,6 +26,7 @@ type DocumentApi interface{
 	GetDocumentStats(fileID string, userID string) ([]schema.WordStat, error)
 	DeleteDocument(fileID, userID string) error
 	DeleteAllDocuments(userID string) error
+	GetHuffman(documentID, userID string) (string, error)
 }
 
 type CollectionApi interface {

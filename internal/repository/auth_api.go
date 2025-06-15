@@ -73,3 +73,71 @@ func (r *AuthRepo) ChangePassword(id, password string) error {
 	return nil
 }
 
+func (r *AuthRepo) SetRefreshToken(userID uuid.UUID, token string) error {
+	token_hash, err := bcrypt.GenerateFromPassword([]byte(token), bcrypt.DefaultCost)
+	if err != nil {
+		log.Println(err.Error())
+		return errors.New("invalid token")
+	}
+	if _, err := r.db.Exec(
+		"UPDATE users SET token_hash = $1 WHERE id = $2",
+		&token_hash, &userID,
+	); err != nil {
+		log.Println(err.Error())
+		return errors.New("failed to set refresh token")
+	}
+	return nil
+}
+
+
+func (r *AuthRepo) CheckAndChangeRefreshToken(userID uuid.UUID, token_old, token_new string) error {
+	var user User
+	if err := r.db.Get(&user, "SELECT * FROM users WHERE id = $1", userID); err != nil {
+		log.Println(err.Error())
+		return errors.New("user not found")
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Token), []byte(token_old)); err != nil {
+		log.Println(err.Error())
+		return errors.New("invalid old token")
+	}
+
+	token_new_hash, err := bcrypt.GenerateFromPassword([]byte(token_new), bcrypt.DefaultCost)
+	if err != nil {
+		log.Println(err.Error())
+		return errors.New("invalid new token")
+	}
+
+	if _, err := r.db.Exec(
+		"UPDATE users SET token_hash = $1, updated_at = NOW() WHERE id = $2",
+		&token_new_hash, &userID,
+	); err != nil {
+		log.Println(err.Error())
+		return errors.New("failed to update refresh token")
+	}
+
+	return nil
+}
+
+func (r *AuthRepo) Logout(id string) error {
+	if _, err := r.db.Exec(
+		"UPDATE users SET token_hash = NULL, updated_at = NULL WHERE id = $1",
+		&id,
+	); err != nil {
+		log.Println(err.Error())
+		return errors.New("logout failed")
+	}
+	return nil
+}
+
+func (r *AuthRepo) DeleteUser(id string) error {
+	if _, err := r.db.Exec(
+		"DELETE FROM users WHERE id = $1",
+		&id,
+	); err != nil {
+		log.Println(err.Error())
+		return errors.New("failed to delete user")
+	}
+	return nil
+}
+

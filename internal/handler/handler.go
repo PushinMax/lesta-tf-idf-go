@@ -28,14 +28,14 @@ func (h *Handler) Init() *gin.Engine {
 		c.HTML(200, "index.html", nil)
 	})
 
-	
+	router.Use(h.MetricsMiddleware())
 	router.POST("/upload", h.JWTAuth(), h.handleUpload)
 	router.GET("/data/:session/:page", h.getPageData)
 
 
 	router.GET("/status", h.status)
 	router.GET("/version", h.version)
-	router.GET("/metrics", nil)
+	router.GET("/metrics", h.getMetrics)
 
 	documents := router.Group("/documents")
 	{
@@ -44,6 +44,7 @@ func (h *Handler) Init() *gin.Engine {
 		documents.GET("/:document_id", h.getDocument)
 		documents.GET("/:document_id/statistics", h.getDocumentsStats)
 		documents.DELETE("/:document_id", h.deleteDocument)
+		documents.GET("/:documnent/haffman", h.getHuffman)
 	}
 	collections := router.Group("/collections")
 	{
@@ -61,11 +62,12 @@ func (h *Handler) Init() *gin.Engine {
 	{
 		user.Use(h.JWTAuth())
 		user.PATCH("/:user_id", h.changePassword)
-		user.DELETE("/:user_id", nil)
+		user.DELETE("/:user_id", h.deleteAccount)
 	}
 	router.POST("/login", h.login)
+	router.POST("/login/refresh", h.refreshToken)
 	router.POST("/register", h.register)
-	router.GET("/logout", nil)
+	router.GET("/logout", h.JWTAuth(),  h.logout)
 
 	return router
 }

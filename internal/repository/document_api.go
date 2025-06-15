@@ -13,6 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
+    "github.com/PushinMax/lesta-tf-idf-go/internal/encoding"
 )
 
 type DocumentRepo struct {
@@ -25,6 +26,8 @@ func newDocumentApi(db *mongo.Database) *DocumentRepo {
 
 
 func (r *DocumentRepo) InsertDocument(document Document) error {
+    huffman := encoding.NewHuffmanCode(document.Content)
+    document.HuffmanEncoding = huffman
     result, err := r.db.Collection("documents").InsertOne(context.TODO(), document)
     if err != nil {
         return err
@@ -252,4 +255,20 @@ func (r *DocumentRepo) DeleteAllDocuments(userID string) error {
     }
 
     return nil
+}
+
+func (r *DocumentRepo) GetHuffman(fileID string, userID string) (string, error) {
+    var doc Document
+    err := r.db.Collection("files").FindOne(
+        context.TODO(),
+        bson.M{
+            "file_id": fileID,
+            "user_id": userID,
+        },
+    ).Decode(&doc)
+    if err != nil {
+        return "", err
+    }
+
+    return doc.HuffmanEncoding.Decode(), nil
 }

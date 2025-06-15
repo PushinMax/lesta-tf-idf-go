@@ -85,3 +85,20 @@ func (h *Handler) deleteDocument(c * gin.Context) {
 	})
 }
 
+func (h *Handler) getHuffman(c *gin.Context) {
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid request body"})
+		return
+	}
+	documentID := c.Param("document_id")
+	huffman, err := h.services.GetHuffman(documentID, userID.(string))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": fmt.Sprintf("Failed: %s", err.Error()),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, huffman)
+}
+
