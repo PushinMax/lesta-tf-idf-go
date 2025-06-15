@@ -62,7 +62,7 @@ func main() {
 	<-ch
 	_ = server.Shutdown(context.Background())
 	_ = db.Close()
-	_ = mongoDB.Disconnect(context.Background())
+	_ = mongoDB.Client().Disconnect(context.Background())
 }
 
 func InitConfig() error {

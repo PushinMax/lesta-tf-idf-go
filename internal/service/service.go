@@ -32,17 +32,24 @@ type UserApi interface {
 	ChangePassword(id, password string) error
 }
 
-type FileApi interface {
-	UploadFile(file *multipart.FileHeader, userID string) (*schema.UploadResponse, error)
-	GetListFiles(userID string) ([]string, error)
-	GetFile(documentID string, userID string) (string, error)
-	GetFilesStats(fileID string, userID string) ([]schema.WordStat, error)
-	DeleteFile(fileID, userID string) error
-	DeleteUserFiles(userID string) (int64, error)
+type DocumentApi interface {
+	UploadDocument(file *multipart.FileHeader, userID string) (*schema.UploadResponse, error)
+	GetListDocuments(userID string) ([]string, error)
+	GetDocument(documentID string, userID string) (string, error)
+	GetDocumentStats(fileID string, userID string) ([]schema.WordStat, error)
+	DeleteDocument(fileID, userID string) error
+	DeleteUserDocuments(userID string) error
 }
 
 type CollectionApi interface {
-
+	CreateCollection(userID, name string) error
+	GetListCollections(userID string) ([]string, error)
+	GetDocumentsInCollection(userID, collectionName string) ([]string, error)
+	GetCollectionStats(userID, collectionName string) ([]schema.WordStat, error)
+	AddDocumentToCollection(userID, collectionName, fileID string) error
+	DeleteDocumentFromCollection(userID, collectionName, fileID string) error
+	DeleteCollection(userID, collectionName string) error
+	DeleteAllCollections(userID string) error
 }
 
 type Service struct {
@@ -51,7 +58,7 @@ type Service struct {
 	StatusApi
 	AuthApi
 	UserApi
-	FileApi
+	DocumentApi
 	CollectionApi
 }
 
@@ -61,6 +68,7 @@ func New(session *session.Session, repos *repository.Repository) *Service {
 		StatusApi: newStatusApi(),
 		AuthApi: newAuthApi(repos),
 		UserApi: newUserApi(repos),
-		FileApi: newFileApi(repos),
+		DocumentApi: newDocumentApi(repos),
+		CollectionApi: newCollectionApi(repos),
 	}
 }

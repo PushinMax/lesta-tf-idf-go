@@ -16,17 +16,17 @@ import (
 )
 
 
-type FileService struct {
+type DocumentService struct {
 	repos *repository.Repository
 }
 
-func newFileApi(repos *repository.Repository) *FileService {
-	return &FileService{
+func newDocumentApi(repos *repository.Repository) *DocumentService {
+	return &DocumentService{
 		repos: repos,
 	}
 }
 
-func (s *FileService) UploadFile(file *multipart.FileHeader, userID string) (*schema.UploadResponse, error) {
+func (s *DocumentService) UploadDocument(file *multipart.FileHeader, userID string) (*schema.UploadResponse, error) {
 	src, err := file.Open()
 	if err != nil {
 		return nil, errors.New("Cannot open file")
@@ -82,7 +82,7 @@ func (s *FileService) UploadFile(file *multipart.FileHeader, userID string) (*sc
 		
 		stats = append(stats, schema.WordStat{
 			Word: word,
-			TF:   tf,
+			TF:   float64(tf),
 			IDF:  idf,
 		})
 	}
@@ -92,13 +92,16 @@ func (s *FileService) UploadFile(file *multipart.FileHeader, userID string) (*sc
 	})
 
 	fileID := generateFileID()
-	err = s.repos.InsertFile(repository.FileDocument{
+	err = s.repos.InsertDocument(repository.Document{
 		FileID: fileID,
 		Name: file.Filename,
 		UserID: userID,
 		Content: content.String(),
 		Stats: stats,
 		Length: totalWords,
+		Collections: make([]string, 0),
+		IsValid: false,
+		Words: make(map[string]int),
 	})
 
 	return &schema.UploadResponse{
@@ -109,20 +112,20 @@ func (s *FileService) UploadFile(file *multipart.FileHeader, userID string) (*sc
 	}, nil
 }
 
-func (s *FileService) GetFile(fileID string, userID string) (string, error) {
-	return s.repos.GetFile(fileID, userID)
+func (s *DocumentService) GetDocument(fileID string, userID string) (string, error) {
+	return s.repos.GetDocument(fileID, userID)
 }
-func (s *FileService) GetListFiles(userID string) ([]string, error) {
-	return s.repos.GetListFiles(userID)
+func (s *DocumentService) GetListDocuments(userID string) ([]string, error) {
+	return s.repos.GetListDocuments(userID)
 }
-func (s *FileService) GetFilesStats(fileID string, userID string) ([]schema.WordStat, error) {
-	return s.repos.GetFilesStats(fileID, userID)
+func (s *DocumentService) GetDocumentStats(fileID string, userID string) ([]schema.WordStat, error) {
+	return s.repos.GetDocumentStats(fileID, userID)
 }
-func (s *FileService) DeleteFile(fileID, userID string) error {
-	return s.repos.DeleteFile(fileID, userID)
+func (s *DocumentService) DeleteDocument(fileID, userID string) error {
+	return s.repos.DeleteDocument(fileID, userID)
 }
-func (s *FileService) DeleteUserFiles(userID string) (int64, error) {
-	return s.repos.DeleteUserFiles(userID)
+func (s *DocumentService) DeleteUserDocuments(userID string) error {
+	return s.repos.DeleteAllDocuments(userID)
 }
 
 func generateFileID() string {

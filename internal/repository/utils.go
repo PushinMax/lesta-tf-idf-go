@@ -43,7 +43,7 @@ type Collection struct {
     Stats   []schema.WordStat `bson:"stat"`
     IsValid bool              `bson:"isvalid"`
     Length  int               `bson:"len"`
-    Words map[string]struct{
+    Words map[string]struct {
         amount_w int `bson:"amount_w"`
         amount_d int `bson:"amount_d"`
     }      `bson:"words"`

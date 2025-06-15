@@ -48,12 +48,13 @@ func (h *Handler) Init() *gin.Engine {
 	collections := router.Group("/collections")
 	{
 		collections.Use(h.JWTAuth())
-		collections.GET("/", nil)
-		collections.POST("/create", nil)
-		collections.GET("/:collection_id", nil)
-		collections.GET("/:collection_id/statistics", nil)
-		collections.DELETE("/:collection/:document_id", nil)
-		collections.POST("/:collection/:document_id", nil)
+		collections.GET("/",  h.getListCollections)
+		collections.POST("/create",  h.createCollection)
+		collections.GET("/:collection_id",  h.getCollection)
+		collections.GET("/:collection_id/statistics",  h.getCollectionStats)
+		collections.DELETE("/:collection/:document_id",  h.deleteDocumentFromCollection)
+		collections.POST("/:collection/:document_id",  h.addDocumentToCollection)
+		collections.DELETE("/:collection/",  h.deleteCollection)
 	}
 
 	user := router.Group("/user")

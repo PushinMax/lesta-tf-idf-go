@@ -16,30 +16,36 @@ type AuthApi interface{
 	//ChangePassword()
 }
 
-type FileApi interface{
-	InsertFile(file FileDocument) error
-	GetFile(fileID string, userID string) (string, error)
-	GetListFiles(userID string) ([]string, error)
-	GetFilesStats(fileID string, userID string) ([]schema.WordStat, error)
-	DeleteFile(fileID, userID string) error
-	DeleteUserFiles(userID string) (int64, error)
+type DocumentApi interface{
+	InsertDocument(document Document) error
+	GetDocument(fileID string, userID string) (string, error)
+	GetListDocuments(userID string) ([]string, error)
+	GetDocumentStats(fileID string, userID string) ([]schema.WordStat, error)
+	DeleteDocument(fileID, userID string) error
+	DeleteAllDocuments(userID string) error
 }
 
 type CollectionApi interface {
-	СreateCollection(userID string, name string) error
+	CreateCollection(userID, name string) error
+	GetListCollections(userID string) ([]string, error)
+	GetDocumentsInCollection(userID, collectionName string) ([]string, error)
+ 	GetCollectionStats(userID, collectionName string) ([]schema.WordStat, error)
+	AddDocumentToCollection(userID, collectionName, fileID string) error
+	DeleteDocumentFromCollection(userID, collectionName, fileID string) error
+	DeleteCollection(userID, collectionName string) error
+	DeleteAllCollections(userID string) error
 }
 
 type Repository struct {
 	AuthApi
-	FileApi
+	DocumentApi
 	CollectionApi
 }
 
-
-
-func New(db *sqlx.DB, mongoDB *mongo.Client) *Repository {
+func New(db *sqlx.DB, mongoDB *mongo.Database) *Repository {
 	return &Repository{
 		AuthApi: newAuthApi(db),
-		FileApi: newFileApi(mongoDB),
+		DocumentApi: newDocumentApi(mongoDB),
+		CollectionApi: NewCollectionApi(mongoDB),
 	}
 }

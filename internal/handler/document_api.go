@@ -14,7 +14,7 @@ func (h *Handler) getListDocuments(c *gin.Context) {
 		return
 	}
 	
-	list, err := h.services.GetListFiles(userID.(string))
+	list, err := h.services.GetListDocuments(userID.(string))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": fmt.Sprintf("Failed: %s", err.Error()),
@@ -35,7 +35,7 @@ func (h *Handler) getDocument(c *gin.Context) {
 		return
 	}
 	documentID := c.Param("document_id")
-	content, err := h.services.GetFile(documentID, userID.(string))
+	content, err := h.services.GetDocument(documentID, userID.(string))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": fmt.Sprintf("Failed: %s", err.Error()),
@@ -56,7 +56,7 @@ func (h *Handler) getDocumentsStats(c *gin.Context) {
 		return
 	}
 	documentID := c.Param("document_id")
-	list, err := h.services.GetFilesStats(documentID, userID.(string))
+	list, err := h.services.GetDocumentStats(documentID, userID.(string))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": fmt.Sprintf("Failed: %s", err.Error()),
@@ -73,7 +73,7 @@ func (h *Handler) deleteDocument(c * gin.Context) {
 		return
 	}
 	documentID := c.Param("document_id")
-	err := h.services.DeleteFile(documentID, userID.(string))
+	err := h.services.DeleteDocument(documentID, userID.(string))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": fmt.Sprintf("Failed: %s", err.Error()),
@@ -84,3 +84,4 @@ func (h *Handler) deleteDocument(c * gin.Context) {
 		"status": "ok",
 	})
 }
+

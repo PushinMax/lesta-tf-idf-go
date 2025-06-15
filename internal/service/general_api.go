@@ -77,7 +77,7 @@ func (s *GenenalService) UploadFile(file *multipart.FileHeader) (*schema.UploadR
 		
 		stats = append(stats, schema.WordStat{
 			Word: word,
-			TF:   tf,
+			TF:   float64(tf),
 			IDF:  idf,
 		})
 	}

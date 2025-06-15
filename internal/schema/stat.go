@@ -4,7 +4,7 @@ package schema
 // Структура для хранения результатов
 type WordStat struct {
 	Word string `bson:"word" json:"word"`
-	TF   int    `bson:"tf" json:"tf"`
+	TF   float64    `bson:"tf" json:"tf"`
 	IDF  float64`bson:"idf" json:"idf"`
 }
 

@@ -18,7 +18,7 @@ func (h *Handler) handleUpload(c *gin.Context) {
 		return
 	}
 
-	response, err := h.services.UploadFile(file, userID.(string))
+	response, err := h.services.UploadDocument(file, userID.(string))
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
