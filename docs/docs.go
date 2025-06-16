@@ -500,7 +500,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/documents/{document_id}/haffman": {
+        "/documents/{document_id}/huffman": {
             "get": {
                 "security": [
                     {
@@ -1230,8 +1230,8 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.4.0",
-	Host:             "localhost:8080",
+	Version:          "1.5.0",
+	Host:             "37.9.53.117:80",
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Text Analysis API",

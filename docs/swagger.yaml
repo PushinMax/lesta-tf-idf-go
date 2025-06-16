@@ -138,12 +138,12 @@ definitions:
       word:
         type: string
     type: object
-host: localhost:8080
+host: 37.9.53.117:80
 info:
   contact: {}
   description: API Server for analyzing text documents and calculating TF-IDF statistics
   title: Text Analysis API
-  version: 1.4.0
+  version: 1.5.0
 paths:
   /collections:
     get:
@@ -453,7 +453,7 @@ paths:
       summary: Get document content
       tags:
       - documents
-  /documents/{document_id}/haffman:
+  /documents/{document_id}/huffman:
     get:
       description: Get Huffman encoding for specific document
       parameters:

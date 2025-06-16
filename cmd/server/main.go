@@ -20,7 +20,7 @@ import (
 
 
 // @title           Text Analysis API
-// @version         1.4.0
+// @version         1.5.0
 // @description     API Server for analyzing text documents and calculating TF-IDF statistics
 // @host            37.9.53.117:80
 // @BasePath        /

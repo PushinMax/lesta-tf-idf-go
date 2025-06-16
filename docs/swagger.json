@@ -4,9 +4,9 @@
         "description": "API Server for analyzing text documents and calculating TF-IDF statistics",
         "title": "Text Analysis API",
         "contact": {},
-        "version": "1.4.0"
+        "version": "1.5.0"
     },
-    "host": "localhost:8080",
+    "host": "37.9.53.117:80",
     "basePath": "/",
     "paths": {
         "/collections": {
@@ -494,7 +494,7 @@
                 }
             }
         },
-        "/documents/{document_id}/haffman": {
+        "/documents/{document_id}/huffman": {
             "get": {
                 "security": [
                     {
