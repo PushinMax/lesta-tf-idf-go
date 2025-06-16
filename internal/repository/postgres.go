@@ -29,9 +29,11 @@ func NewPostgresDB(cfg PostgresConfig) (*sqlx.DB, error) {
 	}
 	if _, err := db.Exec(
 		`CREATE TABLE IF NOT EXISTS users (
-    		id uuid primary key,
-    		login varchar(20),
-    		password_hash text
+			id uuid primary key,
+			login varchar(20),
+			password_hash text,
+			token_hash text,
+			created_at timestamptz,
 		)`,
 	); err != nil {
 		return nil, err
