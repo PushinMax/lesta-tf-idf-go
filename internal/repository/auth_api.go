@@ -74,7 +74,7 @@ func (r *AuthRepo) ChangePassword(id, password string) error {
 }
 
 func (r *AuthRepo) SetRefreshToken(userID uuid.UUID, token string) error {
-	token_hash, err := bcrypt.GenerateFromPassword([]byte(token), bcrypt.DefaultCost)
+	token_hash, err := bcrypt.GenerateFromPassword([]byte(token[:72]), bcrypt.DefaultCost)
 	if err != nil {
 		log.Println(err.Error())
 		return errors.New("invalid token")
@@ -97,12 +97,12 @@ func (r *AuthRepo) CheckAndChangeRefreshToken(userID uuid.UUID, token_old, token
 		return errors.New("user not found")
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Token), []byte(token_old)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Token), []byte(token_old[:72])); err != nil {
 		log.Println(err.Error())
 		return errors.New("invalid old token")
 	}
 
-	token_new_hash, err := bcrypt.GenerateFromPassword([]byte(token_new), bcrypt.DefaultCost)
+	token_new_hash, err := bcrypt.GenerateFromPassword([]byte(token_new[:72]), bcrypt.DefaultCost)
 	if err != nil {
 		log.Println(err.Error())
 		return errors.New("invalid new token")
