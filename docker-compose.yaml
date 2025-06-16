@@ -36,8 +36,8 @@ services:
       POSTGRES_USER: ${DB_USER}  
       POSTGRES_PASSWORD: ${DB_PASSWORD} 
       POSTGRES_DB: postgres  
-    ports:
-      - "5432:5432" # изменить при продакшене 
+    expose:
+      - 5432
     networks:
       - analyzer-network  
 
