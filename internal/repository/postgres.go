@@ -33,7 +33,7 @@ func NewPostgresDB(cfg PostgresConfig) (*sqlx.DB, error) {
 			login varchar(20),
 			password_hash text,
 			token_hash text,
-			created_at timestamptz,
+			created_at timestamptz
 		)`,
 	); err != nil {
 		return nil, err
