@@ -132,7 +132,7 @@ func (h *Handler) deleteDocument(c * gin.Context) {
 // @Success 200 {object} HuffmanResponse
 // @Failure 401 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /documents/{document_id}/haffman [get]
+// @Router /documents/{document_id}/huffman [get]
 func (h *Handler) getHuffman(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {

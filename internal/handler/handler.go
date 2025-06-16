@@ -49,7 +49,7 @@ func (h *Handler) Init() *gin.Engine {
 		documents.GET("/:document_id", h.getDocument)
 		documents.GET("/:document_id/statistics", h.getDocumentsStats)
 		documents.DELETE("/:document_id", h.deleteDocument)
-		documents.GET("/:document_id/haffman", h.getHuffman)
+		documents.GET("/:document_id/huffman", h.getHuffman)
 	}
 	collections := router.Group("/collections")
 	{
