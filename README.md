@@ -87,10 +87,10 @@ MIT
 erDiagram
     USERS {
         uuid id PK
-        varchar(20) login
+        varchar login
         text password_hash
         text token_hash
-        timestamptz created_at
+        timestamp created_at
     }
 ```
 
@@ -98,48 +98,49 @@ erDiagram
 
 #### Document Structure
 ```mermaid
-graph LR
-    Document{Document} --> ID[ObjectID]
-    Document --> FileInfo[File Info]
+flowchart LR
+    Document[Document] --> ID[_id: ObjectID]
+    Document --> FileInfo[File Information]
     Document --> Content[Content]
-    Document --> Statistics[Statistics]
-    Document --> Collections[Collections]
+    Document --> Stats[Statistics]
+    Document --> CollectionsList[Collections List]
     
-    FileInfo --> file_id[file_id: string]
-    FileInfo --> file_name[file_name: string]
-    FileInfo --> user_id[user_id: string]
+    FileInfo --> FID[file_id: string]
+    FileInfo --> FName[name: string]
+    FileInfo --> UID[user_id: string]
     
-    Content --> file[file: string]
-    Content --> len[len: int]
+    Content --> Text[content: string]
+    Content --> Length[length: int]
     
-    Statistics --> stats[stats: WordStat[]]
-    Statistics --> words[words: Map<string,int>]
-    Statistics --> isvalid[isvalid: bool]
+    Stats --> WordStats[stats: Array]
+    Stats --> WordCount[words: Map]
+    Stats --> Valid[isValid: boolean]
     
-    Collections --> collections_list[collections: string[]]
-    Document --> huffman[huffman_encoding: HuffmanCode]
+    CollectionsList --> CList[collections: Array]
+    Document --> Huffman[huffman: Object]
 ```
 
 #### Collection Structure
 ```mermaid
-graph LR
-    Collection{Collection} --> ID[ObjectID]
-    Collection --> Info[Info]
-    Collection --> Statistics[Statistics]
-    Collection --> Documents[Documents]
+flowchart LR
+    Collection[Collection] --> CID[_id: ObjectID]
+    Collection --> BasicInfo[Basic Info]
+    Collection --> Stats[Statistics]
+    Collection --> Docs[Documents]
     
-    Info --> name[name: string]
-    Info --> user_id[user_id: string]
+    BasicInfo --> Name[name: string]
+    BasicInfo --> UID[user_id: string]
     
-    Statistics --> stats[stats: WordStat[]]
-    Statistics --> words[words: Map<string,WordCount>]
-    Statistics --> isvalid[isvalid: bool]
-    Statistics --> len[len: int]
+    Stats --> WordStats[stats: Array]
+    Stats --> WordMap[words: Map]
+    Stats --> Valid[isValid: boolean]
+    Stats --> Length[length: int]
     
-    Documents --> documents_id[documents: string[]]
-
-    WordCount{WordCount} --> amount_w[amount_w: int]
-    WordCount --> amount_d[amount_d: int]
+    Docs --> DocList[documents: Array]
+    
+    WordMap --> Counter[WordCounter]
+    Counter --> DocCount[doc_count: int]
+    Counter --> WordCount[word_count: int]
 ```
 
 ## Contact
