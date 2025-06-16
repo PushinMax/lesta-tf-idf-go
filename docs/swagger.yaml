@@ -1,0 +1,783 @@
+basePath: /
+definitions:
+  handler.ChangePasswordRequest:
+    properties:
+      password:
+        type: string
+    required:
+    - password
+    type: object
+  handler.CollectionDocumentsResponse:
+    properties:
+      documents:
+        items:
+          type: string
+        type: array
+    type: object
+  handler.CollectionListResponse:
+    properties:
+      list:
+        items:
+          type: string
+        type: array
+    type: object
+  handler.CreateCollectionRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  handler.DocumentListResponse:
+    properties:
+      list:
+        items:
+          type: string
+        type: array
+    type: object
+  handler.DocumentResponse:
+    properties:
+      file:
+        type: string
+    type: object
+  handler.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  handler.HuffmanResponse:
+    properties:
+      compressed:
+        type: string
+      encoding:
+        additionalProperties:
+          type: string
+        type: object
+    type: object
+  handler.LoginRequest:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    required:
+    - login
+    - password
+    type: object
+  handler.MetricsResponse:
+    properties:
+      average_latency:
+        example: 123.45ms
+        type: string
+      last_request_time:
+        example: "2025-06-16T10:00:00Z"
+        format: date-time
+        type: string
+      total_requests:
+        type: integer
+    type: object
+  handler.PageDataResponse:
+    properties:
+      total:
+        type: integer
+      words:
+        items:
+          $ref: '#/definitions/schema.WordStat'
+        type: array
+    type: object
+  handler.RefreshRequest:
+    properties:
+      token:
+        type: string
+    required:
+    - token
+    type: object
+  handler.StatsResponse:
+    properties:
+      stat:
+        items:
+          $ref: '#/definitions/schema.WordStat'
+        type: array
+    type: object
+  handler.StatusResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  handler.TokenPairResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  handler.UploadResponse:
+    properties:
+      page:
+        type: integer
+      session_id:
+        type: string
+      total:
+        type: integer
+      words:
+        items:
+          $ref: '#/definitions/schema.WordStat'
+        type: array
+    type: object
+  handler.VersionResponse:
+    properties:
+      version:
+        type: string
+    type: object
+  schema.WordStat:
+    properties:
+      idf:
+        type: number
+      tf:
+        type: number
+      word:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API Server for analyzing text documents and calculating TF-IDF statistics
+  title: Text Analysis API
+  version: 1.4.0
+paths:
+  /collections:
+    get:
+      description: Get all collections for authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.CollectionListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get list of collections
+      tags:
+      - collections
+  /collections/{collection_id}:
+    delete:
+      description: Delete specific collection
+      parameters:
+      - description: Collection ID
+        in: path
+        name: collection_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete collection
+      tags:
+      - collections
+    get:
+      description: Get documents in specific collection
+      parameters:
+      - description: Collection ID
+        in: path
+        name: collection_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.CollectionDocumentsResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get collection details
+      tags:
+      - collections
+  /collections/{collection_id}/{document_id}:
+    delete:
+      description: Remove specific document from collection
+      parameters:
+      - description: Collection ID
+        in: path
+        name: collection_id
+        required: true
+        type: string
+      - description: Document ID
+        in: path
+        name: document_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete document from collection
+      tags:
+      - collections
+    post:
+      description: Add specific document to collection
+      parameters:
+      - description: Collection ID
+        in: path
+        name: collection_id
+        required: true
+        type: string
+      - description: Document ID
+        in: path
+        name: document_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Add document to collection
+      tags:
+      - collections
+  /collections/{collection_id}/statistics:
+    get:
+      description: Get statistics for specific collection
+      parameters:
+      - description: Collection ID
+        in: path
+        name: collection_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.StatsResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get collection statistics
+      tags:
+      - collections
+  /collections/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new collection for authenticated user
+      parameters:
+      - description: Collection creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.CreateCollectionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create new collection
+      tags:
+      - collections
+  /data/{session}/{page}:
+    get:
+      description: Get processed data for a specific page and session
+      parameters:
+      - description: Session ID
+        in: path
+        name: session
+        required: true
+        type: string
+      - description: Page number
+        in: path
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.PageDataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get page data
+      tags:
+      - documents
+  /documents:
+    get:
+      description: Get all documents for authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.DocumentListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get list of documents
+      tags:
+      - documents
+  /documents/{document_id}:
+    delete:
+      description: Delete specific document
+      parameters:
+      - description: Document ID
+        in: path
+        name: document_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.StatusResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete document
+      tags:
+      - documents
+    get:
+      description: Get content of specific document
+      parameters:
+      - description: Document ID
+        in: path
+        name: document_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.DocumentResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get document content
+      tags:
+      - documents
+  /documents/{document_id}/haffman:
+    get:
+      description: Get Huffman encoding for specific document
+      parameters:
+      - description: Document ID
+        in: path
+        name: document_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.HuffmanResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get Huffman encoding
+      tags:
+      - documents
+  /documents/{document_id}/statistics:
+    get:
+      description: Get statistics for specific document
+      parameters:
+      - description: Document ID
+        in: path
+        name: document_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.StatsResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get document statistics
+      tags:
+      - documents
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and get JWT tokens
+      parameters:
+      - description: Login credentials
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.TokenPairResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: User Login
+      tags:
+      - auth
+  /login/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Logout user and invalidate tokens
+      parameters:
+      - description: Login credentials
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.RefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.TokenPairResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: User Refresh Token
+      tags:
+      - auth
+  /logout:
+    get:
+      consumes:
+      - application/json
+      description: Logout user and invalidate tokens
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.StatusResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: User Logout
+      tags:
+      - auth
+  /metrics:
+    get:
+      description: Get API usage metrics including total requests and latency
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.MetricsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get API metrics
+      tags:
+      - metrics
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register new user
+      parameters:
+      - description: Registration Data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.StatusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: User Registration
+      tags:
+      - auth
+  /status:
+    get:
+      description: Check if API is running properly
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get API status
+      tags:
+      - status
+  /upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload a new document for processing
+      parameters:
+      - description: Bearer {token}
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Document file
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.UploadResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload document
+      tags:
+      - documents
+  /user/{user_id}:
+    delete:
+      description: Delete user's account
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.StatusResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete account
+      tags:
+      - users
+    patch:
+      consumes:
+      - application/json
+      description: Change user's password
+      parameters:
+      - description: New password
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.ChangePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.StatusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Change password
+      tags:
+      - users
+  /version:
+    get:
+      description: Get current version of the API
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.VersionResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get API version
+      tags:
+      - status
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

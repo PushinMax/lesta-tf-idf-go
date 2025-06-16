@@ -14,10 +14,19 @@ import (
 	"github.com/PushinMax/lesta-tf-idf-go/internal/session"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
+
+	_ "github.com/PushinMax/lesta-tf-idf-go/docs"
 )
 
 
-
+// @title           Text Analysis API
+// @version         1.4.0
+// @description     API Server for analyzing text documents and calculating TF-IDF statistics
+// @host            37.9.53.117:80
+// @BasePath        /
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func main() {
 	if err := InitConfig(); err != nil {
 		log.Fatal(err)

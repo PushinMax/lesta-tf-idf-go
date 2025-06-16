@@ -5,6 +5,9 @@ import (
 
 	"github.com/PushinMax/lesta-tf-idf-go/internal/service"
 	"github.com/gin-gonic/gin"
+
+	swaggerFiles "github.com/swaggo/files"
+    ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Handler struct {
@@ -18,6 +21,8 @@ func New(services *service.Service) *Handler {
 func (h *Handler) Init() *gin.Engine {
 	router := gin.New()
 
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	
 	router.SetFuncMap(template.FuncMap{
 		"ceilDiv": ceilDiv,
 	})
@@ -44,7 +49,7 @@ func (h *Handler) Init() *gin.Engine {
 		documents.GET("/:document_id", h.getDocument)
 		documents.GET("/:document_id/statistics", h.getDocumentsStats)
 		documents.DELETE("/:document_id", h.deleteDocument)
-		documents.GET("/:documnent/haffman", h.getHuffman)
+		documents.GET("/:document_id/haffman", h.getHuffman)
 	}
 	collections := router.Group("/collections")
 	{

@@ -6,6 +6,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary Change password
+// @Description Change user's password
+// @Tags users
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param request body ChangePasswordRequest true "New password"
+// @Success 200 {object} StatusResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 401 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /user/{user_id} [patch]
 func (h *Handler) changePassword(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
@@ -28,6 +40,15 @@ func (h *Handler) changePassword(c *gin.Context) {
 	})
 }
 
+// @Summary Delete account
+// @Description Delete user's account
+// @Tags users
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} StatusResponse
+// @Failure 401 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /user/{user_id} [delete]
 func (h *Handler) deleteAccount(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {

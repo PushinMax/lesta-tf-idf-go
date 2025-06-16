@@ -1,5 +1,5 @@
 server:
-  version: "v1.0.0"
+  version: "v1.4.0"
   port: "8080"
 
 db:
