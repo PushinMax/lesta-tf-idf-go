@@ -5,10 +5,3 @@ CREATE TABLE IF NOT EXISTS users (
     token_hash text,
     created_at timestamptz,
 );
-
-
-
-
-
-
-

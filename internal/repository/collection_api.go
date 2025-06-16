@@ -166,7 +166,7 @@ func (r *CollectionRepo) GetCollectionStats(userID, collectionName string) ([]sc
 
 func (r *CollectionRepo) AddDocumentToCollection(userID, collectionName, fileID string) error {
 	var doc Document
-    err := r.db.Collection("files").FindOne(
+    err := r.db.Collection("documents").FindOne(
         context.TODO(),
         bson.M{
             "file_id": fileID,
@@ -202,7 +202,7 @@ func (r *CollectionRepo) AddDocumentToCollection(userID, collectionName, fileID 
         collection.Words[word] = wordStat
     }
 
-	_, err = r.db.Collection("files").UpdateOne(
+	_, err = r.db.Collection("documents").UpdateOne(
         context.TODO(),
         bson.M{
             "file_id": fileID,
@@ -254,7 +254,7 @@ func (r *CollectionRepo) AddDocumentToCollection(userID, collectionName, fileID 
 
 func (r *CollectionRepo) DeleteDocumentFromCollection(userID, collectionName, fileID string) error {
 	var doc Document
-    err := r.db.Collection("files").FindOne(
+    err := r.db.Collection("documents").FindOne(
         context.TODO(),
         bson.M{
             "file_id": fileID,
@@ -290,7 +290,7 @@ func (r *CollectionRepo) DeleteDocumentFromCollection(userID, collectionName, fi
     }
 
 
-	_, err = r.db.Collection("files").UpdateOne(
+	_, err = r.db.Collection("documents").UpdateOne(
         context.TODO(),
         bson.M{
             "file_id": fileID,
@@ -353,7 +353,7 @@ func (r *CollectionRepo) DeleteCollection(userID, collectionName string) error {
         return fmt.Errorf("collection not found: %v", err)
     }
 
-    _, err = r.db.Collection("files").UpdateMany(
+    _, err = r.db.Collection("documents").UpdateMany(
         context.TODO(),
         bson.M{
             "file_id": bson.M{
@@ -398,7 +398,7 @@ func (r *CollectionRepo) DeleteAllCollections(userID string) error {
 		return fmt.Errorf("failed to delete all collections: %v", err)
 	}
 
-	_, err = r.db.Collection("files").UpdateMany(
+	_, err = r.db.Collection("documents").UpdateMany(
 		context.TODO(),
 		bson.M{"user_id": userID},
 		bson.M{

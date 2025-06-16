@@ -100,7 +100,7 @@ func (r *DocumentRepo) GetListDocuments(userID string) ([]string, error) {
 
 func (r *DocumentRepo) GetDocumentStats(fileID string, userID string) ([]schema.WordStat, error) {
     var doc Document
-    err := r.db.Collection("files").FindOne(
+    err := r.db.Collection("documents").FindOne(
         context.TODO(),
         bson.M{
             "file_id": fileID,
@@ -170,7 +170,7 @@ func (r *DocumentRepo) GetDocumentStats(fileID string, userID string) ([]schema.
         },
     }
 
-    _, err = r.db.Collection("files").UpdateOne(
+    _, err = r.db.Collection("documents").UpdateOne(
         context.TODO(),
         bson.M{
             "file_id": fileID,
@@ -187,7 +187,7 @@ func (r *DocumentRepo) GetDocumentStats(fileID string, userID string) ([]schema.
 
 func (r *DocumentRepo) DeleteDocument(fileID string, userID string) error {
     var doc Document
-    err := r.db.Collection("files").FindOne(
+    err := r.db.Collection("documents").FindOne(
         context.TODO(),
         bson.M{
             "file_id": fileID,
@@ -219,7 +219,7 @@ func (r *DocumentRepo) DeleteDocument(fileID string, userID string) error {
         }
     }
 
-    _, err = r.db.Collection("files").DeleteOne(
+    _, err = r.db.Collection("documents").DeleteOne(
         context.TODO(),
         bson.M{
             "file_id": fileID,
@@ -234,7 +234,7 @@ func (r *DocumentRepo) DeleteDocument(fileID string, userID string) error {
 }
 
 func (r *DocumentRepo) DeleteAllDocuments(userID string) error {
-    _, err := r.db.Collection("files").DeleteMany(
+    _, err := r.db.Collection("documents").DeleteMany(
         context.TODO(),
         bson.M{"user_id": userID},
     )
@@ -259,7 +259,7 @@ func (r *DocumentRepo) DeleteAllDocuments(userID string) error {
 
 func (r *DocumentRepo) GetHuffman(fileID string, userID string) (string, error) {
     var doc Document
-    err := r.db.Collection("files").FindOne(
+    err := r.db.Collection("documents").FindOne(
         context.TODO(),
         bson.M{
             "file_id": fileID,
