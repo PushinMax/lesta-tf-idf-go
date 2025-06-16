@@ -109,7 +109,7 @@ func (r *AuthRepo) CheckAndChangeRefreshToken(userID uuid.UUID, token_old, token
 	}
 
 	if _, err := r.db.Exec(
-		"UPDATE users SET token_hash = $1, updated_at = NOW() WHERE id = $2",
+		"UPDATE users SET token_hash = $1, created_at = NOW() WHERE id = $2",
 		&token_new_hash, &userID,
 	); err != nil {
 		log.Println(err.Error())
@@ -121,7 +121,7 @@ func (r *AuthRepo) CheckAndChangeRefreshToken(userID uuid.UUID, token_old, token
 
 func (r *AuthRepo) Logout(id string) error {
 	if _, err := r.db.Exec(
-		"UPDATE users SET token_hash = NULL, updated_at = NULL WHERE id = $1",
+		"UPDATE users SET token_hash = '' WHERE id = $1",
 		&id,
 	); err != nil {
 		log.Println(err.Error())
