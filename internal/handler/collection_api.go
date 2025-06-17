@@ -77,11 +77,11 @@ func (h *Handler) createCollection(c *gin.Context) {
 // @Tags collections
 // @Produce json
 // @Security BearerAuth
-// @Param collection_id path string true "Collection ID"
+// @Param collection_name path string true "Collection ID"
 // @Success 200 {object} CollectionDocumentsResponse
 // @Failure 401 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /collections/{collection_id} [get]
+// @Router /collections/{collection_name} [get]
 func (h *Handler) getCollection(c *gin.Context) {
 	 userID, exists := c.Get("user_id")
 	if !exists {
@@ -106,11 +106,11 @@ func (h *Handler) getCollection(c *gin.Context) {
 // @Description Delete specific collection
 // @Tags collections
 // @Security BearerAuth
-// @Param collection_id path string true "Collection ID"
+// @Param collection_name path string true "Collection ID"
 // @Success 200
 // @Failure 401 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /collections/{collection_id} [delete]
+// @Router /collections/{collection_name} [delete]
 func (h *Handler) deleteCollection(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
@@ -133,11 +133,11 @@ func (h *Handler) deleteCollection(c *gin.Context) {
 // @Tags collections
 // @Produce json
 // @Security BearerAuth
-// @Param collection_id path string true "Collection ID"
+// @Param collection_name path string true "Collection ID"
 // @Success 200 {object} StatsResponse
 // @Failure 401 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /collections/{collection_id}/statistics [get]
+// @Router /collections/{collection_name}/statistics [get]
 func (h *Handler) getCollectionStats(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
@@ -161,11 +161,11 @@ func (h *Handler) getCollectionStats(c *gin.Context) {
 // @Tags collections
 // @Security BearerAuth
 // @Param collection_id path string true "Collection ID"
-// @Param document_id path string true "Document ID"
+// @Param document_name path string true "Document ID"
 // @Success 200
 // @Failure 401 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /collections/{collection_id}/{document_id} [post]
+// @Router /collections/{collection_name}/{document_id} [post]
 func (h *Handler) addDocumentToCollection(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {

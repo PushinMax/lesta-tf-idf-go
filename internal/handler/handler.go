@@ -66,8 +66,8 @@ func (h *Handler) Init() *gin.Engine {
 	user := router.Group("/user")
 	{
 		user.Use(h.JWTAuth())
-		user.PATCH("/:user_id", h.changePassword)
-		user.DELETE("/:user_id", h.deleteAccount)
+		user.PATCH("/", h.changePassword)
+		user.DELETE("/", h.deleteAccount)
 	}
 	router.POST("/login", h.login)
 	router.POST("/login/refresh", h.refreshToken)

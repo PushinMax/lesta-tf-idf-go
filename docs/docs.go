@@ -106,7 +106,54 @@ const docTemplate = `{
                 }
             }
         },
-        "/collections/{collection_id}": {
+        "/collections/{collection_id}/{document_id}": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Remove specific document from collection",
+                "tags": [
+                    "collections"
+                ],
+                "summary": "Delete document from collection",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Collection ID",
+                        "name": "collection_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Document ID",
+                        "name": "document_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/collections/{collection_name}": {
             "get": {
                 "security": [
                     {
@@ -125,7 +172,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Collection ID",
-                        "name": "collection_id",
+                        "name": "collection_name",
                         "in": "path",
                         "required": true
                     }
@@ -166,7 +213,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Collection ID",
-                        "name": "collection_id",
+                        "name": "collection_name",
                         "in": "path",
                         "required": true
                     }
@@ -190,7 +237,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/collections/{collection_id}/statistics": {
+        "/collections/{collection_name}/statistics": {
             "get": {
                 "security": [
                     {
@@ -209,7 +256,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Collection ID",
-                        "name": "collection_id",
+                        "name": "collection_name",
                         "in": "path",
                         "required": true
                     }
@@ -236,7 +283,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/collections/{collection_id}/{document_id}": {
+        "/collections/{collection_name}/{document_id}": {
             "post": {
                 "security": [
                     {
@@ -259,52 +306,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Document ID",
-                        "name": "document_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Remove specific document from collection",
-                "tags": [
-                    "collections"
-                ],
-                "summary": "Delete document from collection",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Collection ID",
-                        "name": "collection_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Document ID",
-                        "name": "document_id",
+                        "name": "document_name",
                         "in": "path",
                         "required": true
                     }
@@ -884,7 +886,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/{user_id}": {
+        "/user": {
             "delete": {
                 "security": [
                     {

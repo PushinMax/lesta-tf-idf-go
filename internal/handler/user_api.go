@@ -17,7 +17,7 @@ import (
 // @Failure 400 {object} ErrorResponse
 // @Failure 401 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /user/{user_id} [patch]
+// @Router /user [patch]
 func (h *Handler) changePassword(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
@@ -48,7 +48,7 @@ func (h *Handler) changePassword(c *gin.Context) {
 // @Success 200 {object} StatusResponse
 // @Failure 401 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /user/{user_id} [delete]
+// @Router /user [delete]
 func (h *Handler) deleteAccount(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {

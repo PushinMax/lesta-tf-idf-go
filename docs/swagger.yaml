@@ -168,59 +168,6 @@ paths:
       summary: Get list of collections
       tags:
       - collections
-  /collections/{collection_id}:
-    delete:
-      description: Delete specific collection
-      parameters:
-      - description: Collection ID
-        in: path
-        name: collection_id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: OK
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handler.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handler.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Delete collection
-      tags:
-      - collections
-    get:
-      description: Get documents in specific collection
-      parameters:
-      - description: Collection ID
-        in: path
-        name: collection_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handler.CollectionDocumentsResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handler.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handler.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Get collection details
-      tags:
-      - collections
   /collections/{collection_id}/{document_id}:
     delete:
       description: Remove specific document from collection
@@ -251,6 +198,60 @@ paths:
       summary: Delete document from collection
       tags:
       - collections
+  /collections/{collection_name}:
+    delete:
+      description: Delete specific collection
+      parameters:
+      - description: Collection ID
+        in: path
+        name: collection_name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete collection
+      tags:
+      - collections
+    get:
+      description: Get documents in specific collection
+      parameters:
+      - description: Collection ID
+        in: path
+        name: collection_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.CollectionDocumentsResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get collection details
+      tags:
+      - collections
+  /collections/{collection_name}/{document_id}:
     post:
       description: Add specific document to collection
       parameters:
@@ -261,7 +262,7 @@ paths:
         type: string
       - description: Document ID
         in: path
-        name: document_id
+        name: document_name
         required: true
         type: string
       responses:
@@ -280,13 +281,13 @@ paths:
       summary: Add document to collection
       tags:
       - collections
-  /collections/{collection_id}/statistics:
+  /collections/{collection_name}/statistics:
     get:
       description: Get statistics for specific collection
       parameters:
       - description: Collection ID
         in: path
-        name: collection_id
+        name: collection_name
         required: true
         type: string
       produces:
@@ -700,7 +701,7 @@ paths:
       summary: Upload document
       tags:
       - documents
-  /user/{user_id}:
+  /user:
     delete:
       description: Delete user's account
       produces:
