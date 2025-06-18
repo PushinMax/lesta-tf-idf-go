@@ -106,53 +106,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/collections/{collection_id}/{document_id}": {
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Remove specific document from collection",
-                "tags": [
-                    "collections"
-                ],
-                "summary": "Delete document from collection",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Collection ID",
-                        "name": "collection_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Document ID",
-                        "name": "document_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/collections/{collection_name}": {
             "get": {
                 "security": [
@@ -299,14 +252,59 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Collection ID",
-                        "name": "collection_id",
+                        "name": "collection_name",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "Document ID",
-                        "name": "document_name",
+                        "name": "document_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Remove specific document from collection",
+                "tags": [
+                    "collections"
+                ],
+                "summary": "Delete document from collection",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Collection ID",
+                        "name": "collection_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Document ID",
+                        "name": "document_id",
                         "in": "path",
                         "required": true
                     }

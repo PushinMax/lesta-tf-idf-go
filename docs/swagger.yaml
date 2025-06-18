@@ -168,36 +168,6 @@ paths:
       summary: Get list of collections
       tags:
       - collections
-  /collections/{collection_id}/{document_id}:
-    delete:
-      description: Remove specific document from collection
-      parameters:
-      - description: Collection ID
-        in: path
-        name: collection_id
-        required: true
-        type: string
-      - description: Document ID
-        in: path
-        name: document_id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: OK
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handler.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handler.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Delete document from collection
-      tags:
-      - collections
   /collections/{collection_name}:
     delete:
       description: Delete specific collection
@@ -252,17 +222,46 @@ paths:
       tags:
       - collections
   /collections/{collection_name}/{document_id}:
+    delete:
+      description: Remove specific document from collection
+      parameters:
+      - description: Collection ID
+        in: path
+        name: collection_name
+        required: true
+        type: string
+      - description: Document ID
+        in: path
+        name: document_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete document from collection
+      tags:
+      - collections
     post:
       description: Add specific document to collection
       parameters:
       - description: Collection ID
         in: path
-        name: collection_id
+        name: collection_name
         required: true
         type: string
       - description: Document ID
         in: path
-        name: document_name
+        name: document_id
         required: true
         type: string
       responses:

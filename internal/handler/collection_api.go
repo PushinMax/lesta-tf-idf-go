@@ -160,8 +160,8 @@ func (h *Handler) getCollectionStats(c *gin.Context) {
 // @Description Add specific document to collection
 // @Tags collections
 // @Security BearerAuth
-// @Param collection_id path string true "Collection ID"
-// @Param document_name path string true "Document ID"
+// @Param collection_name path string true "Collection ID"
+// @Param document_id path string true "Document ID"
 // @Success 200
 // @Failure 401 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
@@ -189,12 +189,12 @@ func (h *Handler) addDocumentToCollection(c *gin.Context) {
 // @Description Remove specific document from collection
 // @Tags collections
 // @Security BearerAuth
-// @Param collection_id path string true "Collection ID"
+// @Param collection_name path string true "Collection ID"
 // @Param document_id path string true "Document ID"
 // @Success 200
 // @Failure 401 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /collections/{collection_id}/{document_id} [delete]
+// @Router /collections/{collection_name}/{document_id} [delete]
 func (h *Handler) deleteDocumentFromCollection(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
